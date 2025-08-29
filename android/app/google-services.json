@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "474256970629",
+    "project_id": "upsen-dev1",
+    "storage_bucket": "upsen-dev1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474256970629:android:7235916d2544053b762aec",
+        "android_client_info": {
+          "package_name": "com.infa.dev_upsen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjqgtWZW4xUlsp0afGg9xd7NKLZkfMSE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474256970629:android:43fd56613cc072c7762aec",
+        "android_client_info": {
+          "package_name": "com.infazio.upsen_tablet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjqgtWZW4xUlsp0afGg9xd7NKLZkfMSE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
