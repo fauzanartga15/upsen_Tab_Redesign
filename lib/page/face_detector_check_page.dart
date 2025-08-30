@@ -8,8 +8,8 @@ import 'package:image/image.dart' as img;
 import 'package:toastification/toastification.dart';
 import 'package:upsen_tablet/repository/check_in_repository.dart';
 
-import '../helper/face_detector_painter.dart';
-import '../helper/recognizer.dart';
+import '../helpers/face_detector_painter.dart';
+import '../helpers/recognizer.dart';
 import 'camera_view_attendance_page.dart';
 import 'success_confirmation_view.dart'; // Add this import
 

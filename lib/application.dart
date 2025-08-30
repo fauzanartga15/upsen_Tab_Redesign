@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
-import 'package:upsen_tablet/helper/face_detection_helper.dart';
+import 'package:upsen_tablet/helpers/face_detection_helper.dart';
 import 'package:upsen_tablet/page/login_page.dart';
+import 'package:upsen_tablet/page/login_page_demo.dart';
 
-import 'provider/camera_provider.dart';
+import 'provider/camera_provider/camera_provider.dart';
 
 class Application extends StatelessWidget {
   const Application({super.key});
@@ -27,7 +28,7 @@ class Application extends StatelessWidget {
             useMaterial3: true,
           ),
           debugShowCheckedModeBanner: false,
-          home: const LoginPage(),
+          home: const LoginPageTablet(),
         ),
       ),
     );

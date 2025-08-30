@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
-import '../helper/recognizer.dart';
+import '../helpers/recognizer.dart';
 
 class CameraViewAttendancePage extends StatefulWidget {
   const CameraViewAttendancePage({

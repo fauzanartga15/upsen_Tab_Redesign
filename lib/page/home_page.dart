@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:upsen_tablet/constant/app_color.dart';
 import 'package:upsen_tablet/page/face_detector_check_page.dart';
-import 'login_page.dart'; // Import login page
+import 'login_page_demo.dart'; // Import login page
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -561,12 +561,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
+        color: Colors.white.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             spreadRadius: 0,
           ),
@@ -633,7 +633,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       BoxShadow(
                         color: const Color(
                           0xFF26A69A,
-                        ).withOpacity(_glowAnimation.value),
+                        ).withValues(alpha: _glowAnimation.value),
                         blurRadius: 25,
                         spreadRadius: 2,
                       ),
@@ -659,7 +659,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       Text(
                         'Position your face to begin attendance',
                         style: GoogleFonts.poppins(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 12,
                         ),
                       ),
@@ -728,7 +728,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         border: Border(left: BorderSide(color: statusColor, width: 4)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             spreadRadius: 0,
           ),
