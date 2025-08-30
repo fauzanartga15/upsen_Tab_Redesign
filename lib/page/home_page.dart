@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:upsen_tablet/constant/app_color.dart';
 import 'package:upsen_tablet/page/face_detector_check_page.dart';
+import 'login_page.dart'; // Import login page
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -74,7 +75,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: AppColor.kGradientHomeBg,
+            colors: [
+              AppColor.kBackgroundLight, // Light purple
+              AppColor.kBackgroundMid, // Light blue
+              AppColor.kBackgroundTeal, // Light teal
+            ],
           ),
         ),
         child: SafeArea(
@@ -82,27 +87,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                // Time Display
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '$currentTime AM',
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                // Time Display dan Profile Icon
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(width: 48), // Spacer for balance
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '$currentTime AM',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
+                    _buildProfileButton(),
+                  ],
                 ),
 
                 const SizedBox(height: 20),
@@ -145,12 +154,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: AppColor.kGradientCyanVibrant,
+                  colors: AppColor.kGradientMainAction,
                 ),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColor.kCyanPrimary.withValues(
+                    color: AppColor.kPrimaryColor.withValues(
                       alpha: _glowAnimation.value,
                     ),
                     blurRadius: 25,
@@ -175,7 +184,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         const SizedBox(height: 15),
 
         Text(
-          'PT PRABA BRAKA JAGA',
+          'PT ENKA GLOBAL',
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -189,10 +198,346 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           'Employee Attendance Portal',
           style: GoogleFonts.poppins(
             fontSize: 12,
-            color: const Color(0xFF64748B),
+            color: AppColor.kTextSecondary,
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildProfileButton() {
+    return PopupMenuButton<String>(
+      onSelected: _handleMenuSelection,
+      itemBuilder: (BuildContext context) => [
+        PopupMenuItem<String>(
+          value: 'profile',
+          child: Row(
+            children: [
+              const Icon(Icons.person_outline, size: 20),
+              const SizedBox(width: 12),
+              Text('Profile', style: GoogleFonts.poppins(fontSize: 14)),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'settings',
+          child: Row(
+            children: [
+              const Icon(Icons.settings_outlined, size: 20),
+              const SizedBox(width: 12),
+              Text('Settings', style: GoogleFonts.poppins(fontSize: 14)),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+        PopupMenuItem<String>(
+          value: 'logout',
+          child: Row(
+            children: [
+              const Icon(Icons.logout, size: 20, color: Colors.red),
+              const SizedBox(width: 12),
+              Text(
+                'Logout',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      offset: const Offset(-20, 50),
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: AppColor.kGradientCyanVibrant),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.kPrimaryColor.withValues(alpha: 0.3),
+              blurRadius: 8,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: const Icon(Icons.person, color: Colors.white, size: 24),
+      ),
+    );
+  }
+
+  void _handleMenuSelection(String value) {
+    switch (value) {
+      case 'profile':
+        _showProfileInfo();
+        break;
+      case 'settings':
+        _showSettings();
+        break;
+      case 'logout':
+        _showLogoutConfirmation();
+        break;
+    }
+  }
+
+  void _showProfileInfo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: AppColor.kGradientCyanVibrant,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.person, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Profile Information',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProfileItem('Email', 'ujoy@gmail.com'),
+              _buildProfileItem('Role', 'Administrator'),
+              _buildProfileItem('Department', 'IT Department'),
+              _buildProfileItem(
+                'Last Login',
+                'Today, ${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}',
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Close',
+                style: GoogleFonts.poppins(
+                  color: AppColor.kPrimaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileItem(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              '$label:',
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: AppColor.kTextSecondary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: AppColor.kTextDark,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSettings() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              const Icon(Icons.settings, color: AppColor.kPrimaryColor),
+              const SizedBox(width: 12),
+              Text(
+                'Settings',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: Text(
+                  'Camera Settings',
+                  style: GoogleFonts.poppins(fontSize: 14),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Navigate to camera settings
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.face),
+                title: Text(
+                  'Face Recognition',
+                  style: GoogleFonts.poppins(fontSize: 14),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Navigate to face recognition settings
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.notifications),
+                title: Text(
+                  'Notifications',
+                  style: GoogleFonts.poppins(fontSize: 14),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Navigate to notification settings
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Close',
+                style: GoogleFonts.poppins(
+                  color: AppColor.kPrimaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showLogoutConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.logout, color: Colors.red.shade600, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Logout Confirm',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'Are you sure you want to logout from the attendance system?',
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              color: AppColor.kTextSecondary,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: GoogleFonts.poppins(
+                  color: AppColor.kTextSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.red.shade400, Colors.red.shade600],
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextButton(
+                onPressed: _performLogout,
+                child: Text(
+                  'Logout',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _performLogout() {
+    Navigator.pop(context); // Close dialog
+
+    // Clear any stored tokens/preferences here
+    // SharedPreferences.getInstance().then((prefs) {
+    //   prefs.clear();
+    // });
+
+    // Navigate to login page and clear all previous routes
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (route) => false,
     );
   }
 
@@ -216,12 +561,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.8),
+        color: Colors.white.withOpacity(0.8),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+        border: Border.all(color: Colors.white.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 15,
             spreadRadius: 0,
           ),
@@ -234,7 +579,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             style: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF26A69A),
+              color: AppColor.kPrimaryColor,
             ),
           ),
           const SizedBox(height: 5),
@@ -242,7 +587,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             label,
             style: GoogleFonts.poppins(
               fontSize: 9,
-              color: const Color(0xFF64748B),
+              color: AppColor.kTextSecondary,
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
@@ -277,14 +622,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: AppColor.kGradientCyanVibrant,
+                      colors: [
+                        Color(0xFF26A69A),
+                        Color(0xFF009688),
+                        Color(0xFF004D40),
+                      ],
                     ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColor.kCyanPrimary.withValues(
-                          alpha: _glowAnimation.value,
-                        ),
+                        color: const Color(
+                          0xFF26A69A,
+                        ).withOpacity(_glowAnimation.value),
                         blurRadius: 25,
                         spreadRadius: 2,
                       ),
@@ -310,7 +659,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       Text(
                         'Position your face to begin attendance',
                         style: GoogleFonts.poppins(
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: Colors.white.withOpacity(0.9),
                           fontSize: 12,
                         ),
                       ),
@@ -334,7 +683,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF334155),
+            color: AppColor.kTextPrimary,
           ),
         ),
 
@@ -344,17 +693,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: ListView(
             children: [
               _buildActivityItem(
-                name: 'Sapri - WareHouse Department',
-                details: '✓ Checked in at 07:45 AM ()',
+                name: 'John Doe - IT Department',
+                details: '✓ Checked in at 08:15 AM (On time)',
                 statusColor: Colors.green,
               ),
               _buildActivityItem(
-                name: 'Diana - Purchasing Departement',
-                details: '✓ Checked in at 07:23 AM (On time)',
+                name: 'Jane Smith - HR',
+                details: '✓ Checked in at 08:23 AM (On time)',
                 statusColor: Colors.green,
               ),
               _buildActivityItem(
-                name: 'Ardi - Marketing',
+                name: 'Mike Johnson - Marketing',
                 details: '⏰ Checked in at 08:35 AM (Late)',
                 statusColor: Colors.orange,
               ),
@@ -379,7 +728,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         border: Border(left: BorderSide(color: statusColor, width: 4)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 8,
             spreadRadius: 0,
           ),
@@ -393,7 +742,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E293B),
+              color: AppColor.kTextDark,
             ),
           ),
           const SizedBox(height: 2),
@@ -401,7 +750,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             details,
             style: GoogleFonts.poppins(
               fontSize: 10,
-              color: const Color(0xFF64748B),
+              color: AppColor.kTextSecondary,
             ),
           ),
         ],

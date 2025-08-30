@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
 import 'package:upsen_tablet/helper/face_detection_helper.dart';
-import 'package:upsen_tablet/page/success_confirmation_view.dart';
+import 'package:upsen_tablet/page/login_page.dart';
 
 import 'provider/camera_provider.dart';
 
@@ -19,9 +19,15 @@ class Application extends StatelessWidget {
             create: (context) => CameraProvider(context.read()),
           ),
         ],
-        child: const MaterialApp(
-          home: SuccessConfirmationPage(),
+        child: MaterialApp(
+          title: 'Upsen Attendance',
+          theme: ThemeData(
+            primarySwatch: Colors.teal,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            useMaterial3: true,
+          ),
           debugShowCheckedModeBanner: false,
+          home: const LoginPage(),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 // todo-01-init-02: create a service class
-import 'package:google_ml_kit/google_ml_kit.dart';
+
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 class FaceDetectionHelper {
   // todo-01-init-03: add property and constructor class

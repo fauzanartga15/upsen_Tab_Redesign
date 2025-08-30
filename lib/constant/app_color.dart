@@ -27,6 +27,12 @@ class AppColor {
   static const kAccentCyan = Color(0xFF00BCD4);
 
   // Gradient combinations for wow effect
+  static const kGradientMainAction = [
+    Color(0xFF26A69A), // Teal primary
+    Color(0xFF009688), // Teal secondary
+    Color(0xFF004D40),
+  ];
+
   static const kGradientCyanBright = [
     Color(0xFF06B6D4), // Sky-400
     Color(0xFF0891B2), // Sky-600

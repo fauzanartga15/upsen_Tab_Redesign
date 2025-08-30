@@ -12,7 +12,7 @@ class Recognizer {
   late Interpreter interpreter;
   late InterpreterOptions _interpreterOptions;
 
-  String get modelName => 'assets/mobile_face_net.tflite';
+  String get modelName => 'assets/models/mobile_face_net.tflite';
 
   Future<void> loadModel() async {
     try {
