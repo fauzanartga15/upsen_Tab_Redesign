@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:upsen_tablet/constant/app_color.dart';
 import 'package:upsen_tablet/page/face_detector_check_page.dart';
-import 'login_page_demo.dart'; // Import login page
+import '../provider/auth_provider/auth_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.3),
+                        color: Colors.black.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -142,148 +143,160 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildCompanyHeader() {
-    return Column(
-      children: [
-        AnimatedBuilder(
-          animation: _glowAnimation,
-          builder: (context, child) {
-            return Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: AppColor.kGradientMainAction,
-                ),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.kPrimaryColor.withValues(
-                      alpha: _glowAnimation.value,
+    return Consumer<AuthProvider>(
+      builder: (context, auth, child) {
+        return Column(
+          children: [
+            AnimatedBuilder(
+              animation: _glowAnimation,
+              builder: (context, child) {
+                return Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: AppColor.kGradientMainAction,
                     ),
-                    blurRadius: 25,
-                    spreadRadius: 2,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.kPrimaryColor.withOpacity(
+                          _glowAnimation.value,
+                        ),
+                        blurRadius: 25,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  'EG',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                  child: Center(
+                    child: Text(
+                      auth.user?.name?.substring(0, 2).toUpperCase() ?? 'EG',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                );
+              },
+            ),
+
+            const SizedBox(height: 15),
+
+            Text(
+              'Welcome, ${auth.user?.name ?? 'User'}',
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF334155),
               ),
-            );
-          },
-        ),
+            ),
 
-        const SizedBox(height: 15),
+            const SizedBox(height: 5),
 
-        Text(
-          'PT ENKA GLOBAL',
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF334155),
-          ),
-        ),
-
-        const SizedBox(height: 5),
-
-        Text(
-          'Employee Attendance Portal',
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            color: AppColor.kTextSecondary,
-          ),
-        ),
-      ],
+            Text(
+              'Employee Attendance Portal',
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: AppColor.kTextSecondary,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildProfileButton() {
-    return PopupMenuButton<String>(
-      onSelected: _handleMenuSelection,
-      itemBuilder: (BuildContext context) => [
-        PopupMenuItem<String>(
-          value: 'profile',
-          child: Row(
-            children: [
-              const Icon(Icons.person_outline, size: 20),
-              const SizedBox(width: 12),
-              Text('Profile', style: GoogleFonts.poppins(fontSize: 14)),
-            ],
-          ),
-        ),
-        PopupMenuItem<String>(
-          value: 'settings',
-          child: Row(
-            children: [
-              const Icon(Icons.settings_outlined, size: 20),
-              const SizedBox(width: 12),
-              Text('Settings', style: GoogleFonts.poppins(fontSize: 14)),
-            ],
-          ),
-        ),
-        const PopupMenuDivider(),
-        PopupMenuItem<String>(
-          value: 'logout',
-          child: Row(
-            children: [
-              const Icon(Icons.logout, size: 20, color: Colors.red),
-              const SizedBox(width: 12),
-              Text(
-                'Logout',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.red,
-                  fontWeight: FontWeight.w500,
-                ),
+    return Consumer<AuthProvider>(
+      builder: (context, auth, child) {
+        return PopupMenuButton<String>(
+          onSelected: (String value) => _handleMenuSelection(value, auth),
+          itemBuilder: (BuildContext context) => [
+            PopupMenuItem<String>(
+              value: 'profile',
+              child: Row(
+                children: [
+                  const Icon(Icons.person_outline, size: 20),
+                  const SizedBox(width: 12),
+                  Text('Profile', style: GoogleFonts.poppins(fontSize: 14)),
+                ],
               ),
-            ],
-          ),
-        ),
-      ],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      offset: const Offset(-20, 50),
-      child: Container(
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: AppColor.kGradientCyanVibrant),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.kPrimaryColor.withValues(alpha: 0.3),
-              blurRadius: 8,
-              spreadRadius: 1,
+            ),
+            PopupMenuItem<String>(
+              value: 'settings',
+              child: Row(
+                children: [
+                  const Icon(Icons.settings_outlined, size: 20),
+                  const SizedBox(width: 12),
+                  Text('Settings', style: GoogleFonts.poppins(fontSize: 14)),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem<String>(
+              value: 'logout',
+              child: Row(
+                children: [
+                  const Icon(Icons.logout, size: 20, color: Colors.red),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Logout',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-        ),
-        child: const Icon(Icons.person, color: Colors.white, size: 24),
-      ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          offset: const Offset(-20, 50),
+          child: Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: AppColor.kGradientCyanVibrant,
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.kPrimaryColor.withOpacity(0.3),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: const Icon(Icons.person, color: Colors.white, size: 24),
+          ),
+        );
+      },
     );
   }
 
-  void _handleMenuSelection(String value) {
+  void _handleMenuSelection(String value, AuthProvider auth) {
     switch (value) {
       case 'profile':
-        _showProfileInfo();
+        _showProfileInfo(auth);
         break;
       case 'settings':
         _showSettings();
         break;
       case 'logout':
-        _showLogoutConfirmation();
+        _showLogoutConfirmation(auth);
         break;
     }
   }
 
-  void _showProfileInfo() {
+  void _showProfileInfo(AuthProvider auth) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -296,8 +309,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
                     colors: AppColor.kGradientCyanVibrant,
                   ),
                   shape: BoxShape.circle,
@@ -318,9 +331,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildProfileItem('Email', 'ujoy@gmail.com'),
-              _buildProfileItem('Role', 'Administrator'),
-              _buildProfileItem('Department', 'IT Department'),
+              _buildProfileItem('Name', auth.user?.name ?? 'Unknown'),
+              _buildProfileItem('Email', auth.user?.email ?? 'Unknown'),
+              _buildProfileItem('Phone', auth.user?.phone ?? 'Not provided'),
               _buildProfileItem(
                 'Last Login',
                 'Today, ${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}',
@@ -409,7 +422,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.pop(context);
-                  // Navigate to camera settings
                 },
               ),
               ListTile(
@@ -421,19 +433,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.pop(context);
-                  // Navigate to face recognition settings
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.notifications),
-                title: Text(
-                  'Notifications',
-                  style: GoogleFonts.poppins(fontSize: 14),
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                onTap: () {
-                  Navigator.pop(context);
-                  // Navigate to notification settings
                 },
               ),
             ],
@@ -455,7 +454,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  void _showLogoutConfirmation() {
+  void _showLogoutConfirmation(AuthProvider auth) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -509,7 +508,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextButton(
-                onPressed: _performLogout,
+                onPressed: () {
+                  Navigator.pop(context); // Close dialog
+                  auth.logout(); // Logout menggunakan provider - akan auto redirect ke login
+                },
                 child: Text(
                   'Logout',
                   style: GoogleFonts.poppins(
@@ -522,22 +524,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ],
         );
       },
-    );
-  }
-
-  void _performLogout() {
-    Navigator.pop(context); // Close dialog
-
-    // Clear any stored tokens/preferences here
-    // SharedPreferences.getInstance().then((prefs) {
-    //   prefs.clear();
-    // });
-
-    // Navigate to login page and clear all previous routes
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-      (route) => false,
     );
   }
 
@@ -561,12 +547,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.8),
+        color: Colors.white.withOpacity(0.8),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+        border: Border.all(color: Colors.white.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 15,
             spreadRadius: 0,
           ),
@@ -633,7 +619,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       BoxShadow(
                         color: const Color(
                           0xFF26A69A,
-                        ).withValues(alpha: _glowAnimation.value),
+                        ).withOpacity(_glowAnimation.value),
                         blurRadius: 25,
                         spreadRadius: 2,
                       ),
@@ -659,7 +645,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       Text(
                         'Position your face to begin attendance',
                         style: GoogleFonts.poppins(
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: Colors.white.withOpacity(0.9),
                           fontSize: 12,
                         ),
                       ),
@@ -728,7 +714,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         border: Border(left: BorderSide(color: statusColor, width: 4)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 8,
             spreadRadius: 0,
           ),

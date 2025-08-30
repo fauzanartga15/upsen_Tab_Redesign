@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:upsen_tablet/page/home_page.dart';
 import '../provider/auth_provider/auth_provider.dart';
 
 class LoginPageTablet extends StatefulWidget {
@@ -29,15 +28,13 @@ class _LoginPageTabletState extends State<LoginPageTablet> {
     }
 
     final authProvider = context.read<AuthProvider>();
-    final success = await authProvider.login(
+    await authProvider.login(
       _emailController.text.trim(),
       _passwordController.text,
     );
 
-    if (success && mounted) {
-      // Navigate to home page
-      MaterialPageRoute(builder: (context) => const HomePage());
-    }
+    // Navigasi akan ditangani otomatis oleh AuthWrapper di application.dart
+    // Jadi tidak perlu manual navigation di sini
   }
 
   @override
@@ -63,7 +60,7 @@ class _LoginPageTabletState extends State<LoginPageTablet> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
+                      color: Colors.black.withOpacity(0.1),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),

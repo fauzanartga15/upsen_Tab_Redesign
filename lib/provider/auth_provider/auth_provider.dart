@@ -2,28 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/storage_helper.dart';
 import '../../model/user_model.dart';
-
-// Copy model dari mobile Anda
-class LoginModel {
-  final UserModel? user;
-  final String? token;
-
-  LoginModel({this.user, this.token});
-
-  factory LoginModel.fromMap(Map<String, dynamic> json) => LoginModel(
-    user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
-    token: json["token"],
-  );
-
-  Map<String, dynamic> toMap() => {"user": user?.toJson(), "token": token};
-
-  LoginModel copyWith({UserModel? user, String? token}) {
-    return LoginModel(user: user ?? this.user, token: token ?? this.token);
-  }
-}
-
-// Simplified UserModel untuk tablet (ambil field penting saja)
+import '../../model/login_model.dart';
 
 class AuthProvider with ChangeNotifier {
   AuthState _state = AuthState.unauthenticated;
@@ -97,8 +78,7 @@ class AuthProvider with ChangeNotifier {
       final loginModel = LoginModel.fromMap(response.data);
 
       // Save token
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', loginModel.token ?? '');
+      await StorageHelper.setString('token', loginModel.token ?? '');
 
       // Update dio headers with token
       _dio.options.headers['Authorization'] = 'Bearer ${loginModel.token}';
@@ -134,9 +114,8 @@ class AuthProvider with ChangeNotifier {
 
       _setUnauthenticated();
     } catch (e) {
-      // Even if API fails, clear local data
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('token');
+      // Even if API fails, clear local data, logout
+      await StorageHelper.remove('token');
       _dio.options.headers.remove('Authorization');
       _setUnauthenticated();
     }
@@ -145,8 +124,7 @@ class AuthProvider with ChangeNotifier {
   // Check if already logged in
   Future<void> checkAuthStatus() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final token = StorageHelper.getString('token');
 
       if (token != null && token.isNotEmpty) {
         // Update dio headers
@@ -163,8 +141,8 @@ class AuthProvider with ChangeNotifier {
       }
     } catch (e) {
       // Token invalid, clear it
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('token');
+      await StorageHelper.remove('token');
+
       _setUnauthenticated();
     }
   }
